@@ -1,20 +1,50 @@
 import fs from "node:fs/promises";
 
-const Filepath = "data.txt";
+const filepath = "data.txt";
 
+// Create file
 async function createFile(content) {
-    try{
-       await fs.writeFile(Filepath, content, "utf-8");
-    console.log("File created successfully");
-}
-catch(error){
-    console.log("Error creating file", error);
-}
-}
-async function readFile() {
-    const content = await fs.readFile(Filepath, "utf-8");
-    console.log("File content:", content);
+    try {
+        await fs.writeFile(filepath, content, "utf-8");
+        console.log("File created successfully");
+    } catch (error) {
+        console.error("Error creating file:", error);
+    }
 }
 
-// Function Calling Statement
-createFile("Hello, World!");
+// Read file
+async function readFile() {
+    try {
+        const data = await fs.readFile(filepath, "utf8");
+        console.log("File contents:", data);
+    } catch (err) {
+        console.error("Error reading file:", err);
+    }
+}
+
+// Append to file
+async function appendFile(content) {
+    try {
+        await fs.appendFile(filepath, content, "utf8");
+        console.log("Content appended successfully");
+    } catch (err) {
+        console.error("Error appending file:", err);
+    }
+}
+
+// Delete file
+async function deleteFile() {
+    try {
+        await fs.unlink(filepath);
+        console.log("File deleted successfully");
+    } catch (err) {
+        console.error("Error deleting file:", err);
+    }
+}
+
+// Function calling
+
+createFile("Hello World\n");
+readFile();
+appendFile("This is new content\n");
+deleteFile();

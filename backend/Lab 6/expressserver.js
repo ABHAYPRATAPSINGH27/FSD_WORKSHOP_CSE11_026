@@ -1,13 +1,13 @@
 import express from "express";
 //import dotev from "dotenv";
-import cors from "cors";
+// import cors from "cors";
 // app.use(cors());
 //dotev.config();
 //const port=process.env.PORT || 3000;
 const port = 3000;
 const app = express();
 app.use(express.json());
-app.use(cors());
+// app.use(cors());
 const userData = [
   {
     name: "John Doe",
@@ -16,24 +16,32 @@ const userData = [
   },
 ];
 
-const registerData = [];
 
-app.get("/", (req, res) => {
-  res.status(200).json({
-    message: "Welcome user",
-  });
-});
 
 app.get("/user", (req, res) => {
-  res.status(200).json({
-    users: userData,
-  });
+  try {
+    res.status(200).json({
+      users: userData,
+    });
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({
+      message: "Failed to fetch users",
+    });
+  }
 });
 
 app.get("/register", (req, res) => {
-  res.status(200).json({
-    users: registerData,
-  });
+  try {
+    res.status(200).json({
+      users: registerData,
+    });
+  } catch (error) {
+    console.error("Error fetching registered users:", error);
+    res.status(500).json({
+      message: "Failed to fetch registered users",
+    });
+  }
 });
 
 app.get("/user/:id", (req, res) => {
@@ -52,12 +60,11 @@ app.get("/user/:id", (req, res) => {
 
 app.post("/create", (req, res) => {
   try {
-    const { name, email, class: className } = req.body;
+    const { name, email } = req.body;
     const newUser = {
       id: userData.length + 1,
       name,
       email,
-      class: className,
     };
     userData.push(newUser);
     res.status(201).json({
@@ -74,7 +81,7 @@ app.post("/create", (req, res) => {
 
 app.put("/edit/:id", (req, res) => {
   const userId = parseInt(req.params.id);
-  const index = userData.findIndex((user) => user.id === userId);
+  const index = userData.findIndex((user) => user.id == userId);
   if (index !== -1) {
     const { name, class: className } = req.body;
     userData[index] = {
